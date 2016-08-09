@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Municipality;
+use app\models\Organization;
 
 class SiteController extends Controller
 {
@@ -60,7 +62,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Municipality();
+        return $this->render('index', [
+            'model' => $model->getMunicipalitiesForIndex(),
+        ]);
     }
 
     /**
@@ -121,5 +126,14 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionOrganizationsByMunicipality($id) {
+        $title = new Municipality();
+        $model = new Organization();
+        return $this->render('organizationbymunicipality',[
+            'model' => $model->getOrganizationsByMunicipality($id),
+            'municipality' => $title->find()->where(['id' => $id])->one()
+        ]);
     }
 }

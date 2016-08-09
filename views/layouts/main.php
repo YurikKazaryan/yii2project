@@ -4,10 +4,12 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\Municipality;
 
 AppAsset::register($this);
 ?>
@@ -27,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Образовательный портал Забайкальского края',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -60,7 +62,25 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
-        <?= $content ?>
+        <div class="site-index">
+
+            <div class="body-content">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <?php
+                        $model = new Municipality();
+                        $model = $model->getMunicipalitiesForIndex();
+                        ?>
+                        <?= Html::ul($model, ['item' => function($item, $index){
+                            return Html::tag(
+                                'li',
+                                Html::a($item['name'],Url::to(['site/organizations-by-municipality','id' => $item['id']]))
+                            );
+                        }]);
+                        ?>
+                    </div>
+                    <?= $content ?>
     </div>
 </div>
 
