@@ -67,7 +67,7 @@ AppAsset::register($this);
             <div class="body-content">
 
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-3 organizations">
                         <?php
                         $model = new Municipality();
                         $model = $model->getMunicipalitiesForIndex();
@@ -81,7 +81,7 @@ AppAsset::register($this);
                         ?>
                     </div>
                     <?= $content ?>
-    </div>
+                 </div>
 </div>
 
 <footer class="footer">

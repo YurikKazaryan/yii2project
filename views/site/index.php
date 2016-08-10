@@ -7,7 +7,7 @@ use yii\helpers\Url;
 
 $this->title = 'Главная страница';
 ?>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et

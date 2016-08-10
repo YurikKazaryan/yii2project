@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Municipality;
 use app\models\Organization;
+use app\models\OrganizationType;
 
 class SiteController extends Controller
 {
@@ -128,11 +130,43 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionOrganizationsByMunicipality($id) {
+    public function actionOrganizationsByMunicipality($id)
+    {
+        $organizationModel = new Organization();
         $title = new Municipality();
-        $model = new Organization();
+        $availableTypes = $organizationModel->find()->select('ot.id, ot.name')
+            ->join('JOIN','organizationType ot','`ot`.`id`=`type`')
+            ->where(['raion' => $id])->distinct(true)->orderBy('ot.id')->all();
+        $availableTypes = ArrayHelper::toArray($availableTypes);
+        $i = 0;
+        foreach ($availableTypes as $availableType) {
+            $organizationsByType = $organizationModel->find()->select('id, name')
+                ->where(['type' => $availableType['id'], 'raion' => $id])->orderBy('name')->all();
+            $organizationsByType = ArrayHelper::toArray($organizationsByType);
+            $availableTypes[$i]['id'] = $availableType['id'];
+            $availableTypes[$i]['name'] = $availableType['name'];
+            $availableTypes[$i]['organizations'] = $organizationsByType;
+            unset($organizationsByType);
+            $i++;
+        }
+        /*$organizationTypeAttributes = [];
+        $organizationsByType = [];
+        $organizationType = new OrganizationType();
+        $organization = new Organization();
+        $organizationTypeArray = $organizationType->find()->all();
+        foreach ($organizationTypeArray as $item)
+        {
+            $organizationTypeAttributes[$item->attributes['id']] = $item->attributes['name'];
+            $organizations = $organization->find()->where(['type' => $item->attributes['id'], 'raion' => $id])
+                ->orderBy('name')->all();
+            foreach ($organizations as $singleOrganization)
+            {
+                $organizationsByType[$singleOrganization->attributes['id']] = $singleOrganization->attributes['name'];
+            }
+            $organizationTypeAttributes[$item->attributes['id']] = $organizationsByType;
+        }*/
         return $this->render('organizationbymunicipality',[
-            'model' => $model->getOrganizationsByMunicipality($id),
+            'model' => $availableTypes,
             'municipality' => $title->find()->where(['id' => $id])->one()
         ]);
     }
