@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\Municipality;
+use app\models\User;
 
 AppAsset::register($this);
 ?>
@@ -81,8 +82,13 @@ AppAsset::register($this);
                         ?>
                     </div>
                     <?= $content ?>
+                    <div class="col-md-2">
+                        <?php
+                        $user = new User();
+                        ?>
+                    </div>
                  </div>
-</div>
+            </div>
 
 <footer class="footer">
     <div class="container">
